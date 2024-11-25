@@ -1,9 +1,9 @@
 
 /*
  * Class: CMSC203 
- * Instructor: Farnaz Eivazi
- * Description: calcualtes the total holiday bonus and creates the array
- * Due: 05/01/2024
+ * Instructor: Professor Eivazi
+ * Description: calculates the holiday bonus for each sale
+ * Due: 11/24/24
  * Platform/compiler:Eclipse
  * I pledge that I have completed the programming assignment independently.
 *  I have not copied the code from a student or any source. 
@@ -12,11 +12,9 @@
 */
 
 public class HolidayBonus {
-	public static final int maxBonus = 5000;
-	public static final int lowestBonus = 1000;
-	public static final int normalBonus = 2000;
-	
-	
+	private static final double MAX_SALES = 5000;
+	private static final double LOW_SALES = 1000;
+	private static final double NORMAL_SALES = 2000;
 	public HolidayBonus()
 	{
 		
@@ -24,64 +22,64 @@ public class HolidayBonus {
 	
 	public static double[] calculateHolidayBonus(double[][]data)
 	{
+		//represents the bonuses from each store
+		double[] holidayBonuses = new double[data.length];
 		
-		//create the bonus array depending on the number of rows
-		double[] bonusList = new double[data.length];
-		
-		for(int i=0;i<bonusList.length;i++)
+		for(int i=0;i<data.length;i++)
 		{
-			//calculates total holiday bonus from each stores
-			int bonusSum = 0;
-			for(int j=0;j<data[i].length;j++)
+			//represents the sum from each store, which will be added throughout the rows
+			double sum = 0.0;
+			for(int j=0; j< data[i].length;j++)
 			{
-				
-				//if the highest index of the current column equals the index of current row
-				//add 5000 to the bonus
-				if(TwoDimRaggedArrayUtility.getHighestInColumnIndex(data, j) == i)
-				{
-					bonusSum +=5000;
-				}
-				//if the lowest index of the current column equals the index of current row
-				//add 1000 to the bonus
-				else if(TwoDimRaggedArrayUtility.getLowestInColumnIndex(data, j) == i)
-				{
-					bonusSum +=1000;
-				}
-				
-				//checks to see if the number is 0 or negative
-				else if(data[i][j] < 0 || data[i][j] ==0)
+				//is the element is a negative, the store doesn't qualify for bonuses
+				if(data[i][j]<0)
 				{
 					continue;
 				}
-	
-				//add 2000 to bonus if all if statements above are false
+				
+				//if the index of the highest sale in the current column is equal to the current row index
+				//then add 5000 bonus
+				else if(TwoDimRaggedArrayUtility.getHighestInColumnIndex(data, j) == i)
+				{
+					sum+=MAX_SALES;
+				}
+				
+				//if the index of the lowest sale in the current column is equal to the current row index
+				//then add the 1000 bonus
+				else if(TwoDimRaggedArrayUtility.getLowestInColumnIndex(data, j) == i)
+				{
+					sum+=LOW_SALES;
+				}
+				//add 2000 when the sale is not the highest or the lowest 
 				else
 				{
-					bonusSum +=2000;
+					sum+=NORMAL_SALES;
 				}
 			}
 			
-			//adds the total bonus of the row to an index of the bonus array
-			bonusList[i] = bonusSum;
+			//adds the total sums from all the stores into the array
+			holidayBonuses[i] = sum;
 		}
 		
-		return bonusList;
+		return holidayBonuses;
 	}
 	
-	public static double calculateTotalHolidayBonus(double[][]data)
+	public static double calculateTotalHolidayBonus(double[][] data)
 	{
-		double totalBonus = 0;
+		double totalHolidayBonus = 0.0;
 		
-		//copies the bonus array by reference
-		double [] placeHolder = calculateHolidayBonus(data);
+		//retrieves the bonuses from each store
+		double[] bonuses = calculateHolidayBonus(data);
 		
-		//adds up all the bonus from the stores
-		for(int i=0;i<placeHolder.length;i++)
+		//adds the bonuses from each bonuses
+		for(int i=0;i<bonuses.length;i++)
 		{
-			totalBonus +=placeHolder[i];
+			totalHolidayBonus+=bonuses[i];
 		}
 		
-		return totalBonus;
+		return totalHolidayBonus;
+		
+		
 	}
 	
 }
